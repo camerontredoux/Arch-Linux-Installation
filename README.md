@@ -120,7 +120,8 @@ Installation
    [multilib]
    Include = /etc/pacman.d/mirrorlist
    ```
-
+   and run ```pacman -Sy```
+   
 Inside the Installation
 ---
 
