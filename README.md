@@ -180,6 +180,8 @@ Setting Up ```systemd-boot``` and ```intel-ucode```
    initrd /intel-ucode.img
    initrd /initramfs-linux.img
    options root=UUID=<UUID> quiet rw
+   options module_blacklist=btusb,iTCO_vendor_support,iTCO_wdt,uvcvideo
+   options nowatchdog
    ```
 
 Reboot and Installing Necessary Packages
@@ -217,11 +219,23 @@ Unplug your installation media and boot into the new installation.
    ```
    **ii. Then**
    ``` javascript
-   cd /etc/netctl
-   netctl start <name>
-   ping google.com
+   systemctl enable netctl-auto@wlp2s0.service
    ```
-   **iii. If pinging google works (retry it a few times, it might take a while to connect)**
+2. Enable ```TRIM``` but make sure your SSD supports it first
    ``` javascript
-   netctl enable <name>
+   systemctl enable fstrim.timer
+   ```
+3. Add your user, uncomment ```%wheel ALL=(ALL) ALL``` with ```visudo```, change password for your user, and remove login for ```root```
+   ``` javascript
+   useradd -mG wheel cameron
+   visudo
+   passwd cameron
+   passwd -l root
+   ```
+4. Alter your ```fstab```
+   ``` javascript
+   UUID=... / ext4 rw,relatime,data=ordered 0 1
+   UUID=... /boot vfat  rw,relatime,fmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro  0 2
+   UUID=... none  swap  defaults  0 0
+   tempfs /tmp  tempfs  defaults,noatime,mode=1777  0 0
    ```
