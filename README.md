@@ -31,10 +31,10 @@ Bootable USB
 BIOS
 ---
 
-1. Change ```Sleep State``` by going to ```Config > Power > Sleep State [Linux]```
-2. Disable ```Secure Boot``` by going to ```Security > Secure Boot > Secure Boot [Disabled]```
-3. Enable ```Thunderbolt BIOS Assist Mode``` by going to ```Config > Thunderbolt(TM) 3 > Thunderbolt BIOS Assist Mode [Enabled]```
-4. Disable ```I/O Port Access``` items by going to ```Security > I/O Port Access``` and setting any unused I/O Devices to ```Disabled```
+* Change ```Sleep State``` by going to ```Config > Power > Sleep State [Linux]```
+* Disable ```Secure Boot``` by going to ```Security > Secure Boot > Secure Boot [Disabled]```
+* Enable ```Thunderbolt BIOS Assist Mode``` by going to ```Config > Thunderbolt(TM) 3 > Thunderbolt BIOS Assist Mode [Enabled]```
+* Disable ```I/O Port Access``` items by going to ```Security > I/O Port Access``` and setting any unused I/O Devices to ```Disabled```
 
 Installation
 ---
@@ -75,11 +75,11 @@ Installation
    
    * Now we will create our partitioning scheme.
    
-      |    Partition   |       Size       |       Type       |
-      |:--------------:|:----------------:|:----------------:|
-      | /dev/nvme0n1p1 | 512M             | EFI Filesystem   |
-      | /dev/nvme0n1p2 | Remaining - Swap | Linux Filesystem |
-      | /dev/nvme0n1p3 | 2G               | Swap             |
+      |    Partition   |             Size             |       Type       |
+      |:--------------:|:----------------------------:|:----------------:|
+      | /dev/nvme0n1p1 | 512M                         | EFI Filesystem   |
+      | /dev/nvme0n1p2 | Remaining (Account for Swap) | Linux Filesystem |
+      | /dev/nvme0n1p3 | 2G                           | Swap             |
       
       Use the menu at the bottom of ```cfdisk``` to change the type of each partition, and create them in the order above, making sure to leave room for the swap partition (if you even need it. Personally, I just have it there in case but you can always use a swap file). Then, select ```Write``` at the bottom, write ```Yes```, and quit out of ```cfdisk```.
       
@@ -104,5 +104,77 @@ Installation
    
 6. Install the base system with ```pacstrap``` and use ```base-devel``` for installing things like ```make``` (useful for installing ```st``` or ```dwm```)
    ``` javascript
-   pacstrap /mnt base base-devel
+   pacstrap /mnt base base-devel neovim
    ```
+7. Generate the ```fstab``` with ```-U``` to use ```UUID```
+   ``` javascript
+   genfstab -U /mnt >> /mnt/etc/fstab
+   ```
+8. Change Root (chroot) into the installation
+   ``` javascript
+   arch-chroot /mnt
+   ```
+9. Open ```/etc/pacman.conf``` and uncomment the following
+   ``` javascript
+   [multilib]
+   Include = /etc/pacman.d/mirrorlist
+   ```
+
+Inside the Installation
+---
+
+1. Set the timezone and setup the clock (use your own country and city)
+   ``` javascript
+   ln -sf /usr/share/zoneinfo/America/Denver /etc/localtime
+   hwclock --systohc
+   ```
+2. Open ```/etc/locale.gen``` and uncomment your needed localization
+   ``` javascript
+   en_US.UTF-8 UTF-8
+   ```
+   and run ```locale-gen```
+   
+3. Create the ```/etc/locale.conf``` file and add your localization
+   ``` javascript
+   LANG=en_US.UTF-8
+   LC_COLLATE=C
+   ```
+4. Open ```/etc/hostname``` and add your hostname
+   ``` javascript
+   tredoux
+   ```
+5. Add this to your ```/etc/hosts```
+   ``` javascript
+   127.0.0.1    localhost
+   ::1          localhost
+   127.0.1.1    tredoux.localdomain tredoux
+6. Install ```intel-ucode``` microcode from Pacman
+   ``` javascript
+   pacman -S intel-ucode
+   ```
+
+Setting Up ```systemd-boot``` and ```intel-ucode```
+---
+
+* Before starting, if you are using LVM or encryption, follow the two guides I posted above and ignore the following
+
+1. Install ```systemd-boot``` in our ```/boot``` directory
+   ``` javascript
+   bootctl install
+   ```
+2. Setup the boot files
+   * Edit ```/boot/loader/loader.conf``` but set the timeout to something like 3 
+   ``` javascript
+   default arch
+   timeout 0
+   editor 0
+   ```
+   * Edit/create ```/boot/loader/entries/arch.conf``` and add the following
+   ``` javascript
+   title Arch Linux
+   linux /vmlinuz-linux
+   initrd /intel-ucode.img
+   initrd /initramfs-linux.img
+   options root=UUID=<UUID> quiet rw
+   ```
+      * Replace ```<UUID>``` with the value of running ```blkid -s UUID -o value /dev/nvme0n1p2``` in your terminal.
