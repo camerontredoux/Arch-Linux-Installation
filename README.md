@@ -1,4 +1,5 @@
 # Arch Linux and BSPWM Installation on X1 Carbon 6th Gen
+
 This "guide" is here to help me install Arch Linux on my ThinkPad X1 Carbon 6th Gen with BSPWM. It also covers wiping your Windows 10 installation that comes with the laptop by default (we clear the SSD's memory cells from within the Arch installation media).
 
 Introduction
@@ -152,6 +153,7 @@ Inside the Installation
    ``` javascript
    pacman -S intel-ucode
    ```
+* This is where the Arch Installation Wiki ends. If you followed this guide, you also followed the entire Arch Installation Guide, minus some very useful explanations. However, (and this is a reminder to myself) you should not have had the need to look back and forth between this guide and the Wiki unless you wanted extra explanation (I have a tendency to get anal about my setups and want them to be **_PERFECT_** and waste time looking back and forth between the Wiki and this).
 
 Setting Up ```systemd-boot``` and ```intel-ucode```
 ---
@@ -170,6 +172,7 @@ Setting Up ```systemd-boot``` and ```intel-ucode```
    editor 0
    ```
    * Edit/create ```/boot/loader/entries/arch.conf``` and add the following
+      * Replace ```<UUID>``` with the value of running ```blkid -s UUID -o value /dev/nvme0n1p2``` in your terminal.
    ``` javascript
    title Arch Linux
    linux /vmlinuz-linux
@@ -177,4 +180,8 @@ Setting Up ```systemd-boot``` and ```intel-ucode```
    initrd /initramfs-linux.img
    options root=UUID=<UUID> quiet rw
    ```
-      * Replace ```<UUID>``` with the value of running ```blkid -s UUID -o value /dev/nvme0n1p2``` in your terminal.
+
+Reboot and Installing Necessary Packages
+---
+
+At this point, you have a very minimal installation with your bootloader setup and all the necessary packages needed to simply run Arch Linux. However, it will look very boring considering it is just a terminal. You also won't be able to have proper power management setup at this point or any graphics drivers. So, let's move on to the next stage of the installation! (This is where we setup ```X.Org```, ```bspwm```, ```tlp```, etc.)
