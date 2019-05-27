@@ -105,7 +105,7 @@ Installation
    
 6. Install the base system with ```pacstrap``` and use ```base-devel``` for installing things like ```make``` (useful for installing ```st``` or ```dwm```)
    ``` javascript
-   pacstrap /mnt base base-devel neovim
+   pacstrap /mnt base base-devel neovim wpa_supplicant
    ```
 7. Generate the ```fstab``` with ```-U``` to use ```UUID```
    ``` javascript
@@ -184,4 +184,6 @@ Setting Up ```systemd-boot``` and ```intel-ucode```
 Reboot and Installing Necessary Packages
 ---
 
-At this point, you have a very minimal installation with your bootloader setup and all the necessary packages needed to simply run Arch Linux. However, it will look very boring considering it is just a terminal. You also won't be able to have proper power management setup at this point or any graphics drivers. So, let's move on to the next stage of the installation! (This is where we setup ```X.Org```, ```bspwm```, ```tlp```, etc.)
+At this point, you should have a very minimal installation with your bootloader setup and all the necessary packages needed to simply run Arch Linux. However, it kind of looks boring, considering it is just a terminal. You also won't be able to have proper power management setup at this point. So, let's move on to the next stage of the installation! (This is where we setup ```X.Org```, ```bspwm```, ```tlp```, etc.)
+
+
