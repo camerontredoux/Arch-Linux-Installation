@@ -187,6 +187,13 @@ Reboot and Installing Necessary Packages
 
 At this point, you should have a very minimal installation with your bootloader setup and all the necessary packages needed to simply run Arch Linux. However, it kind of looks boring, considering it is just a terminal. You also won't be able to have proper power management setup at this point. So, let's move on to the next stage of the installation! (This is where we setup ```X.Org```, ```bspwm```, ```tlp```, etc.)
 
+Set your root password
+``` javascript
+passwd
+```
+
+and exit
+
 ``` javascript
 exit
 umount -R /mnt
@@ -194,3 +201,27 @@ shutdown now
 ```
 
 Unplug your installation media and boot into the new installation.
+
+1. Setup WiFi and use ```ip addr``` to get the name of your WiFi interface
+   ``` javascript
+   ip addr
+   ip link set <interface> down
+   cp /etc/netctl/examples/wireless-wpa /etc/netctl/<name>
+   nvim /etc/netctl/<name>
+   ```
+   **i. Inside of ```/etc/netctl/<name>```**
+   ``` javascript
+   Interface: <interface>
+   ESSID: <name of WiFi you are connecting to>
+   key: <password of WiFi you are connecting to>
+   ```
+   **ii. Then**
+   ``` javascript
+   cd /etc/netctl
+   netctl start <name>
+   ping google.com
+   ```
+   **iii. If pinging google works (retry it a few times, it might take a while to connect)**
+   ``` javascript
+   netctl enable <name>
+   ```
