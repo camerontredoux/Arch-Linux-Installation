@@ -186,4 +186,10 @@ Reboot and Installing Necessary Packages
 
 At this point, you should have a very minimal installation with your bootloader setup and all the necessary packages needed to simply run Arch Linux. However, it kind of looks boring, considering it is just a terminal. You also won't be able to have proper power management setup at this point. So, let's move on to the next stage of the installation! (This is where we setup ```X.Org```, ```bspwm```, ```tlp```, etc.)
 
+``` javascript
+exit
+umount -R /mnt
+shutdown now
+```
 
+Unplug your installation media and boot into the new installation.
