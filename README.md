@@ -78,9 +78,9 @@ Installation
    
       |    Partition   |             Size             |       Type       |
       |:--------------:|:----------------------------:|:----------------:|
-      | /dev/nvme0n1p1 | 512M                         | EFI Filesystem   |
-      | /dev/nvme0n1p2 | Remaining (Account for Swap) | Linux Filesystem |
-      | /dev/nvme0n1p3 | 2G                           | Swap             |
+      | /dev/nvme0n1p1 | 256M                         | EFI System       |
+      | /dev/nvme0n1p2 | Remaining (Account for Swap) | Linux filesystem |
+      | /dev/nvme0n1p3 | 2G                           | Linux swap       |
       
       Use the menu at the bottom of ```cfdisk``` to change the type of each partition, and create them in the order above, making sure to leave room for the swap partition (if you even need it. Personally, I just have it there in case but you can always use a swap file). Then, select ```Write``` at the bottom, write ```Yes```, and quit out of ```cfdisk```.
       
