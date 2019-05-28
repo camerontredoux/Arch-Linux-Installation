@@ -105,7 +105,7 @@ Installation
    
 6. Install the base system with ```pacstrap``` and use ```base-devel``` for installing things like ```make``` (useful for installing ```st``` or ```dwm```)
    ``` javascript
-   pacstrap /mnt base base-devel neovim wpa_supplicant
+   pacstrap /mnt base base-devel neovim wpa_supplicant intel-ucode git
    ```
 7. Generate the ```fstab``` with ```-U``` to use ```UUID```
    ``` javascript
@@ -150,10 +150,7 @@ Inside the Installation
    127.0.0.1    localhost
    ::1          localhost
    127.0.1.1    tredoux.localdomain tredoux
-6. Install ```intel-ucode``` microcode from Pacman
-   ``` javascript
-   pacman -S intel-ucode
-   ```
+
 * This is where the Arch Installation Wiki ends. If you followed this guide, you also followed the entire Arch Installation Guide, minus some very useful explanations. However, (and this is a reminder to myself) you should not have had the need to look back and forth between this guide and the Wiki unless you wanted extra explanation (I have a tendency to get anal about my setups and want them to be **_PERFECT_** and waste time looking back and forth between the Wiki and this).
 
 Setting Up ```systemd-boot``` and ```intel-ucode```
@@ -179,9 +176,7 @@ Setting Up ```systemd-boot``` and ```intel-ucode```
    linux /vmlinuz-linux
    initrd /intel-ucode.img
    initrd /initramfs-linux.img
-   options root=UUID=<UUID> quiet rw
-   options module_blacklist=btusb,iTCO_vendor_support,iTCO_wdt,uvcvideo
-   options nowatchdog
+   options root=UUID=<UUID> quiet loglevel=3 module_blacklist=btusb,iTCO_vendor_support,iTCO_wdt,uvcvideo nowatchdog rw
    ```
 
 Reboot and Installing Necessary Packages
@@ -238,4 +233,29 @@ Unplug your installation media and boot into the new installation.
    UUID=... /boot vfat  rw,relatime,fmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro  0 2
    UUID=... none  swap  defaults  0 0
    tempfs /tmp  tempfs  defaults,noatime,mode=1777  0 0
+   ```
+5. Install ```yay``` package manager
+   ``` javascript
+   git clone https://aur.archlinux.org/yay.git
+   cd yay
+   makepkg -si
+   yay -S yay
+   ```
+6. Pacman Hook for clearing cache. Create ```hooks``` folder in ```/etc/pacman.d/``` and create the file ```clean_cache.hook``` in the ```hooks``` folder
+   ``` javascript
+   [Trigger]
+   Operation = Remove
+   Operation = Install
+   Operation = Upgrade
+   Type = Package
+   Target = *
+   
+   [Action]
+   Description = Keep currently installed and last cache
+   When = PostTransaction
+   Exec = /usr/bin/paccache -rvk2
+   ```
+7. Masking ```lvm2-monitor.service``` helped speed up my boot since I was not using LVM
+   ``` javascript
+   sudo systemctl mask lvm2-monitor.service
    ```
