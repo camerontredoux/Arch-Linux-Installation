@@ -259,3 +259,4 @@ Unplug your installation media and boot into the new installation.
    ``` javascript
    sudo systemctl mask lvm2-monitor.service
    ```
+8. 
