@@ -271,15 +271,15 @@ Unplug your installation media and boot into the new installation.
    system_ctl mask systemd-rfkill.service
    system_ctl mask systemd-rfkill.socket
    ```
-10. Install ```Lenovo Throttling Fix```
+9. Install ```Lenovo Throttling Fix```
    ``` javascript
    yay -S lenovo-throttling-fix-git
    sudo systemctl enable --now lenovo_fix.service
    ```
-11. Install ```X.Org``` packages
+9. Install ```X.Org``` packages
    ``` javascript
    sudo pacman -S xorg-server xorg-xinit xorg-xbacklight xorg-xrandr xorg-xsetroot xorg-xset fontconfig
    yay -S xclip
    ```
-12. Setup our fonts by following the instructions at [this link](https://www.reddit.com/r/archlinux/comments/5r5ep8/make_your_arch_fonts_beautiful_easily/)
+9. Setup our fonts by following the instructions at [this link](https://www.reddit.com/r/archlinux/comments/5r5ep8/make_your_arch_fonts_beautiful_easily/)
    
