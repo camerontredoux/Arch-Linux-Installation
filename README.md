@@ -259,4 +259,27 @@ Unplug your installation media and boot into the new installation.
    ``` javascript
    sudo systemctl mask lvm2-monitor.service
    ```
-8. 
+8. Install ```zsh``` and set it up to your liking
+   ``` javascript
+   sudo pacman -S zsh
+   ```
+9. Install ```tlp``` and other power saving tools. I set my charging thresholds to ```45%``` and ```85%```
+   ``` javascript
+   sudo pacman -S tlp tlp-rdw acpi_call tpacpi-bat
+   system_ctl enable tlp.service
+   system_ctl enable tlp-sleep.service
+   system_ctl mask systemd-rfkill.service
+   system_ctl mask systemd-rfkill.socket
+   ```
+10. Install ```Lenovo Throttling Fix```
+   ``` javascript
+   yay -S lenovo-throttling-fix-git
+   sudo systemctl enable --now lenovo_fix.service
+   ```
+11. Install ```X.Org``` packages
+   ``` javascript
+   sudo pacman -S xorg-server xorg-xinit xorg-xbacklight xorg-xrandr xorg-xsetroot xorg-xset fontconfig
+   yay -S xclip
+   ```
+12. Setup our fonts by following the instructions at [this link](https://www.reddit.com/r/archlinux/comments/5r5ep8/make_your_arch_fonts_beautiful_easily/)
+   
