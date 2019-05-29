@@ -298,3 +298,16 @@ Unplug your installation media and boot into the new installation.
       XLLINC = /usr/include/X11
       X11LIB = /usr/lib/X11
       ```
+9. Enable Tap to Click
+      ``` javascript
+      Section "InputClass"
+        Identifier "X1 Carbon Touchpad"
+        MatchIsTouchpad "on"
+        Driver "libinput"
+
+        Option "Tapping" "on"
+        Option "AccelProfile"      "adaptive"
+        Option "AccelSpeed"        "0.15"
+        Option "ClickMethod"       "clickfinger"
+      EndSection
+      ```
