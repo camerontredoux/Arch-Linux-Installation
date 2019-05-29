@@ -1,4 +1,4 @@
-# Arch Linux and BSPWM Installation on X1 Carbon 6th Gen
+# Arch Linux and Installation on X1 Carbon 6th Gen
 
 This "guide" is here to help me install Arch Linux on my ThinkPad X1 Carbon 6th Gen with BSPWM. It also covers wiping your Windows 10 installation that comes with the laptop by default (we clear the SSD's memory cells from within the Arch installation media).
 
@@ -103,9 +103,9 @@ Installation
 5. Edit your ```/etc/pacman.d/mirrorlist``` to increase download speed for the next step:
    * Use a tool like ```Reflector``` to make this process faster. I did it all by hand though. Essentially, you just want the mirrors with the best connection relative to you at the top of the file (I put all the servers from the USA at the top).
    
-6. Install the base system with ```pacstrap``` and use ```base-devel``` for installing things like ```make``` (useful for installing ```st``` or ```dwm```)
+6. Install the base system with ```pacstrap``` and use ```base-devel``` for installing things like ```make``` (useful for installing ```st``` or ```dwm```). Also, my HiDPI display did not work unless I installed ```Firefox```, because ```Firefox``` includes some packages that make ```X.Org``` work with setting a higher DPI (don't ask me why).
    ``` javascript
-   pacstrap /mnt base base-devel neovim wpa_supplicant intel-ucode git
+   pacstrap /mnt base base-devel neovim wpa_supplicant intel-ucode git firefox xorg-server xorg-xinit
    ```
 7. Generate the ```fstab``` with ```-U``` to use ```UUID```
    ``` javascript
@@ -278,8 +278,23 @@ Unplug your installation media and boot into the new installation.
    ```
 9. Install ```X.Org``` packages
    ``` javascript
-   sudo pacman -S xorg-server xorg-xinit xorg-xbacklight xorg-xrandr xorg-xsetroot xorg-xset fontconfig
+   sudo pacman -S xf86-video-intel xorg-xbacklight xorg-xrandr xorg-xsetroot xorg-xset fontconfig libxft libxinerama
    yay -S xclip
    ```
 9. Setup our fonts by following the instructions at [this link](https://www.reddit.com/r/archlinux/comments/5r5ep8/make_your_arch_fonts_beautiful_easily/)
-   
+9. Install ```simple terminal``` and ```dmenu``` and ```bspwm```
+   ``` javascript
+   sudo pacman -S bspwm sxhkd
+   cd .config
+   mkdir bspwm sxhkd
+   cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm
+   cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd
+   git clone https://git.suckless.org/st
+   git clone https://git.suckless.org/dmenu
+   ```
+      * Inside of the ```st``` and ```dmenu``` folders, edit both of their ```config.mk``` files
+      ``` javascript
+      nvim config.mk
+      XLLINC = /usr/include/X11
+      X11LIB = /usr/lib/X11
+      ```
